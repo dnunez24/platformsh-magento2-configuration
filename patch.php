@@ -6,7 +6,7 @@ require_once 'src/Platformsh/Environment.php';
 $env = new Environment();
 
 $env->log("Copying static.php to front-static.php");
-copy(Environment::MAGENTO_ROOT . 'pub/static.php', Environment::MAGENTO_ROOT . 'pub/front-static.php');
+copy($env->getMagentoPath('/pub/static.php'), $env->getMagentoPath('/pub/front-static.php'));
 
 $dirName = __DIR__ . '/patches';
 
@@ -17,14 +17,14 @@ foreach ($files as $file) {
     $env->execute($cmd);
 }
 
-copy(Environment::MAGENTO_ROOT . 'app/etc/di.xml', Environment::MAGENTO_ROOT . 'app/di.xml');
-mkdir(Environment::MAGENTO_ROOT . 'app/enterprise', 0777, true);
-copy(Environment::MAGENTO_ROOT . 'app/etc/enterprise/di.xml', Environment::MAGENTO_ROOT . 'app/enterprise/di.xml');
+copy($env->getMagentoPath('/app/etc/di.xml'), $env->getMagentoPath('/app/di.xml'));
+mkdir($env->getMagentoPath('/app/enterprise'), 0777, true);
+copy($env->getMagentoPath('/app/etc/enterprise/di.xml'), $env->getMagentoPath('/app/enterprise/di.xml'));
 
-$sampleDataDir = Environment::MAGENTO_ROOT . 'vendor/magento/sample-data-media';
+$sampleDataDir = $env->getMagentoPath('/vendor/magento/sample-data-media');
 if (file_exists($sampleDataDir)) {
     $env->log("Sample data media found. Marshalling to pub/media.");
-    $destination = Environment::MAGENTO_ROOT . '/pub/media';
+    $destination = $env->getMagentoPath('/pub/media');
     foreach (
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($sampleDataDir, \RecursiveDirectoryIterator::SKIP_DOTS),

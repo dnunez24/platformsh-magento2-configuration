@@ -24,7 +24,7 @@ if (isset($relationships['redis']) && count($relationships['redis']) > 0) {
     $env->execute("redis-cli -h $redisHost -p $redisPort -n $redisCacheDb flushall");
 }
 
-$fileCacheDir = Environment::MAGENTO_ROOT . '/var/cache';
+$fileCacheDir = $env->getMagentoPath('/var/cache');
 if (file_exists($fileCacheDir)) {
     $env->execute("rm -rf $fileCacheDir");
 }
@@ -41,7 +41,7 @@ foreach ($env->writableDirs as $dir) {
         $env->execute(sprintf('/bin/bash -c "shopt -s dotglob; cp -R ./init/%s/* %s/ || true"', $dir, $dir));
         $env->log(sprintf('Copied directory: %s', $dir));
     } else {
-        $generationDir = realpath(Environment::MAGENTO_ROOT . 'var/generation');
+        $generationDir = $env->getMagentoPath('/var/generation');
         if (file_exists($generationDir)) {
             $timestamp = time();
             // Must match directory name for the cleanup step in deploy command
