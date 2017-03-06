@@ -32,7 +32,7 @@ class Environment
      */
     public function getMagentoPath($relativePath)
     {
-        return realpath($this->getMagentoRoot . $relativePath);
+        return realpath($this->getMagentoRoot() . $relativePath);
     }
 
     /**
