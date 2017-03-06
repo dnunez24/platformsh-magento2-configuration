@@ -48,8 +48,8 @@ class Build extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->buildOptions = $this->parseBuildOptions();
         $this->env = new Environment();
+        $this->buildOptions = $this->parseBuildOptions();
         $this->build();
     }
 
