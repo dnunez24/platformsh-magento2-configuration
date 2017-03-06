@@ -14,6 +14,26 @@ class Environment
     const MAGENTO_ROOT = __DIR__ . '/../../../../../../';
 
     public $writableDirs = ['var/di', 'var/generation', 'app/etc', 'pub/media'];
+    
+    /**
+     * Get the Magento root directory as an absolute path.
+     *
+     * @return string
+     */
+    public function getMagentoRoot()
+    {
+        return realpath(self::MAGENTO_ROOT);
+    }
+    
+    /**
+     * Get an absolute path from the Magento root directory.
+     *
+     * @return string
+     */
+    public function getMagentoPath($relativePath)
+    {
+        return realpath($this->getMagentoRoot . $relativePath);
+    }
 
     /**
      * Get routes information from Platformsh environment variable.

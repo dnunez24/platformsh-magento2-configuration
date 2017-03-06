@@ -476,7 +476,7 @@ class Deploy extends Command
         // Clear old static content if necessary
         if ($this->cleanStaticViewFiles) {
             // atomic move within pub/static directory
-            $staticContentLocation = realpath(Environment::MAGENTO_ROOT . 'pub/static/') . '/';
+            $staticContentLocation = $this->env->getMagentoPath('/pub/static/') . '/';
             $timestamp = time();
             $oldStaticContentLocation = $staticContentLocation . 'old_static_content_' . $timestamp;
 
@@ -505,7 +505,7 @@ class Deploy extends Command
             $this->env->log("Removing $oldStaticContentLocation in the background");
             $this->env->backgroundExecute("rm -rf $oldStaticContentLocation");
 
-            $preprocessedLocation = realpath(Environment::MAGENTO_ROOT . 'var') . '/view_preprocessed';
+            $preprocessedLocation = $this->env->getMagentoPath('/var/view_preprocessed');
             if (file_exists($preprocessedLocation)) {
                 $oldPreprocessedLocation = $preprocessedLocation . '_old_' . $timestamp;
                 $this->env->log("Rename $preprocessedLocation  to $oldPreprocessedLocation");
@@ -518,7 +518,7 @@ class Deploy extends Command
         // Check can move in from stash
         if ($this->checkCanMoveStaticContentFromStash()) {
             // atomic move within pub/static directory
-            $staticContentLocation = Environment::MAGENTO_ROOT . 'pub/static/';
+            $staticContentLocation = $this->env->getMagentoPath('/pub/static/');
             $this->env->log("Moving in new static content from stash location {$this->staticContentStashLocation} into $staticContentLocation");
 
             $dir = new \DirectoryIterator($this->staticContentStashLocation);
@@ -642,7 +642,7 @@ class Deploy extends Command
     private function disableRedisCache()
     {
         $this->env->log("Disabling redis cache.");
-        $configFile = Environment::MAGENTO_ROOT . '/app/etc/env.php';
+        $configFile = $this->env->getMagentoPath('/app/etc/env.php');
         if (file_exists($configFile)) {
             $config = include $configFile;
             if (isset($config['cache'])) {
@@ -659,7 +659,7 @@ class Deploy extends Command
     private function enableRedisCache()
     {
         $this->env->log("Enabling redis cache.");
-        $configFile = Environment::MAGENTO_ROOT . '/app/etc/env.php';
+        $configFile = $this->env->getMagentoPath('/app/etc/env.php');
         if (file_exists($configFile)) {
             $config = include $configFile;
             $config['cache'] = $this->getRedisCacheConfiguration();
@@ -699,6 +699,6 @@ class Deploy extends Command
     {
         $this->env->log("Removing old generated code in the background");
         // Must match filename of old generated assets directory in pre-deploy.php
-        $this->env->backgroundExecute("rm -rf " . realpath(Environment::MAGENTO_ROOT . 'var') . '/generation_old_*');
+        $this->env->backgroundExecute("rm -rf " . $this->env->getMagentoPath('/var/generation_old_*'));
     }
 }

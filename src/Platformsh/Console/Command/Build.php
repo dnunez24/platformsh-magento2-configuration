@@ -83,7 +83,8 @@ class Build extends Command
     private function applyMccPatches()
     {
         $this->env->log("Applying patches.");
-        $this->env->execute('/usr/bin/php ' . Environment::MAGENTO_ROOT . 'vendor/platformsh/platformsh-magento2-configuration/patch.php');
+        $path = $this->env->getMagentoPath('/vendor/platformsh/platformsh-magento2-configuration/patch.php')
+        $this->env->execute('/usr/bin/php ' . $path);
     }
 
     /**
@@ -91,7 +92,7 @@ class Build extends Command
      */
     private function applyCommittedPatches()
     {
-        $patchesDir = Environment::MAGENTO_ROOT . 'm2-hotfixes/';
+        $patchesDir = $this->env->getMagentoPath('/m2-hotfixes/');
         $this->env->log("Checking if patches exist under " . $patchesDir);
         if (is_dir($patchesDir)) {
             $files = glob($patchesDir . "*");
@@ -133,9 +134,9 @@ class Build extends Command
      */
     private function parseBuildOptions()
     {
-        $fileName = Environment::MAGENTO_ROOT . '/build_options.ini';
+        $fileName = $this->env->getMagentoPath('/build_options.ini');
         return file_exists($fileName)
-            ? parse_ini_file(Environment::MAGENTO_ROOT . '/build_options.ini')
+            ? parse_ini_file($fileName)
             : [];
     }
 
